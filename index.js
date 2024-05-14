@@ -82,6 +82,18 @@ async function run() {
       res.send(result);
     });
 
+    // put data on update allFoods 
+    app.put("/allFoods/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const update = {
+        $set: req.body,
+      };
+      const result = await allFood.updateOne(query, update);
+      res.send(result);
+    });
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
