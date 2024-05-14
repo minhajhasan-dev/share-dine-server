@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 require("dotenv").config();
 const port = process.env.PORT || 5000;
@@ -40,7 +40,7 @@ async function run() {
     // get all data from database
     app.get("/allFoods", async (req, res) => {
       const sort = req.query.sort;
-      const search = req.query.search;
+      const search = req.query.search || "";
       let query = {
         foodName: { $regex: search, $options: "i" },
       };
@@ -50,6 +50,35 @@ async function run() {
         options.sort = { expiredDate: sort === "expiring" ? 1 : -1 };
       }
       const result = await allFood.find(query, options).toArray();
+      res.send(result);
+    });
+    // get single data from database
+    app.get("/allFoods/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await allFood.findOne(query);
+      res.send(result);
+    });
+
+    // requested food
+    const requestedFood = client.db("shareDine").collection("requestedFood");
+    // post food to database
+    app.post("/requestedFood", async (req, res) => {
+      const food = req.body;
+      const result = await requestedFood.insertOne(food);
+      res.send(result);
+    });
+    // delete from database allFood
+    app.delete("/allFoods/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await allFood.deleteOne(query);
+      res.send(result);
+    });
+
+    // get all data from database
+    app.get("/requestedFood", async (req, res) => {
+      const result = await requestedFood.find({}).toArray();
       res.send(result);
     });
 
