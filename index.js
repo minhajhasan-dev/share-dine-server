@@ -40,16 +40,18 @@ async function run() {
     // get all data from database
     app.get("/allFoods", async (req, res) => {
       const sort = req.query.sort;
+      const search = req.query.search;
+      let query = {
+        foodName: { $regex: search, $options: "i" },
+      };
+
       let options = {};
       if (sort) {
         options.sort = { expiredDate: sort === "expiring" ? 1 : -1 };
       }
-      const result = await allFood.find({}, options).toArray();
+      const result = await allFood.find(query, options).toArray();
       res.send(result);
-     
     });
-
-
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
