@@ -29,12 +29,27 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // collections here
-    const demo = client.db("shareDine").collection("demo");
+    const allFood = client.db("shareDine").collection("allFood");
     // get all data from database
-    app.get("/demo", async (req, res) => {
-      const result = await demo.find().toArray();
+    // post food to database
+    app.post("/allFoods", async (req, res) => {
+      const food = req.body;
+      const result = await allFood.insertOne(food);
       res.send(result);
     });
+    // get all data from database
+    app.get("/allFoods", async (req, res) => {
+      const sort = req.query.sort;
+      let options = {};
+      if (sort) {
+        options.sort = { expiredDate: sort === "expiring" ? 1 : -1 };
+      }
+      const result = await allFood.find({}, options).toArray();
+      res.send(result);
+     
+    });
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
