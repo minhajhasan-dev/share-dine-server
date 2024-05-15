@@ -11,9 +11,8 @@ app.use(
     origin: [
       "https://share-dine-client.web.app",
       "http://localhost:5173",
-      "https://share-dine-client.firebaseapp.com/",
+      "https://share-dine-client.firebaseapp.com",
     ],
-    credentials: true,
   })
 );
 app.use(express.json());
