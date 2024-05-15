@@ -93,6 +93,13 @@ async function run() {
       res.send(result);
     });
 
+    // sort featured foods based on quantity
+    app.get("/featuredFoods", async (req, res) => {
+      const result = await allFood.find({}).toArray();
+      result.sort((a, b) => Number(b.foodQuantity) - Number(a.foodQuantity));
+      res.send(result.slice(0, 6));
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
