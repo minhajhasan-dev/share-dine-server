@@ -8,11 +8,7 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: [
-      "https://share-dine-client.web.app",
-      "https://share-dine-client.firebaseapp.com",
-      "http://localhost:5173",
-    ],
+    origin: "https://share-dine-client.web.app",
     credentials: true,
   })
 );
