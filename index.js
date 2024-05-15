@@ -6,7 +6,11 @@ const port = process.env.PORT || 5000;
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "share-dine-client.web.app",
+    "https://share-dine-client.firebaseapp.com",
+  ],
   credentials: true,
   optionsSuccessStatus: 200,
 };
