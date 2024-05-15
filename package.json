@@ -1,6 +1,7 @@
 {
   "name": "share-dine-server",
   "version": "1.0.0",
+  "proxy": "https://share-dine-server.vercel.app",
   "description": "",
   "main": "index.js",
   "scripts": {
