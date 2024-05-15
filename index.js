@@ -5,17 +5,17 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 const app = express();
 
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "share-dine-client.web.app",
-    "https://share-dine-client.firebaseapp.com",
-  ],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
 // Middleware
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: [
+      "https://share-dine-client.web.app",
+      "https://share-dine-client.firebaseapp.com",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // code from MongoDB---------------------------------------------------------
@@ -105,7 +105,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
