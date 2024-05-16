@@ -15,6 +15,8 @@ app.use(
       "http://localhost:5173",
       "https://share-dine-client.firebaseapp.com",
     ],
+    credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
 app.use(express.json());
@@ -34,6 +36,7 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // collections here
+
     // jwt generated here (encode/decode)
     app.post("/jwt", (req, res) => {
       const user = req.body;
@@ -46,6 +49,18 @@ async function run() {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production" ? true : false,
           sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        })
+        .send({ success: true });
+    });
+
+    // clear token from cookie
+    app.post("/logout", (req, res) => {
+      res
+        .clearCookie("token", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+          maxAge: 0,
         })
         .send({ success: true });
     });
@@ -81,6 +96,7 @@ async function run() {
       res.send(result);
     });
 
+
     // requested food
     const requestedFood = client.db("shareDine").collection("requestedFood");
     // post food to database
@@ -97,13 +113,13 @@ async function run() {
       res.send(result);
     });
 
+
     // get all data from database
     app.get("/requestedFood", async (req, res) => {
       const result = await requestedFood.find({}).toArray();
       res.send(result);
     });
 
-    // put data on update allFoods
     app.put("/allFoods/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
